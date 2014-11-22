@@ -21,18 +21,34 @@
 
       <div data-role="content" role="main">
 
-        <select name="mode" id="mode">
-          <option value="normal">Normal Mode</option>
-          <option value="emulation">Emulation Mode</option>
-        </select>
-
-        <a id="scan-button" href="#" data-role="button" data-inline="true">Scan</a>
-        <div id="device-list">
-          Empty List
+        <div>
+          <h1>Introduction</h1>
+          The nRF51822 EK TM is a nice Bluetooth Smart development board. This demo shows how to access this board from HTML.
         </div>
 
-        <p> The current die temperature is: <span id="temperature"> -- C </span></p>
+        <div>
+          <h1>Settings</h1>
+          <select name="mode" id="mode">
+            <option value="normal">Normal Mode</option>
+            <option value="emulation">Emulation Mode</option>
+          </select>
+          <p>Select emulation mode if you have no board to use</p>
+          <a id="scan-button" href="#" data-role="button" data-inline="true">Scan</a><span>click to see nearby devices</span>
+          <div id="device-list">
+            Empty List
+          </div>
+        </div>
 
+        <div>
+          <h1>Features</h1>
+
+          <h2>Core temperature sensor</h2>
+          <p id="temperature"> The current core temperature is: <span id="temperature-value"> -- C </span> (click to refresh) </p>
+
+          <h2>Buzzer</h2>
+          <a id="beep-button" href="#" data-role="button" data-inline="true">Beep</a><span>(click to beep for a while)</span>
+
+        </div>
       </div>
 
       <div data-role="footer">
