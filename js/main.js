@@ -19,15 +19,6 @@ select_device = function(device) {
 }
 
 $(function(){
-	$('#selectDevice').click(function(){
-	    selectDevice(function(device){
-	        console.log(JSON.stringify(device));
-	        $('#device_name').html(device.name);
-	        $('#device_addr').html(device.address);
-            selected_device = device
-	    });
-	})
-	
 	$('#mode').change(on_mode_selected);
 
     on_mode_selected();
@@ -72,7 +63,7 @@ $(function(){
         });
     });
 
-	$('#temperature').click(function() { // click event handler
+	$('#temperature').click(function() {
 	    if(g_device != 0) {
 	        var params = {
 	            address : g_device.address,
@@ -81,7 +72,21 @@ $(function(){
 	        };
 
 	        $.getJSON(url, params, function(data){
-	            $('#temperature').html(data['value']+" C");
+	            $('#temperature-value').html(data['value']+" C");
+	        });
+	    }
+	});
+
+	$('#beep-button').click(function() {
+	    if(g_device != 0) {
+	        var params = {
+	            address : g_device.address,
+	            resource : "/sensors/buzzer",
+	            operation : "write",
+				value : "5s"
+	        };
+
+	        $.getJSON(url, params, function(data){
 	        });
 	    }
 	}); 
