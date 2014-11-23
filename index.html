@@ -27,16 +27,22 @@
         </div>
 
         <div>
-          <h1>Settings</h1>
-          <select name="mode" id="mode">
-            <option value="normal">Normal Mode</option>
-            <option value="emulation">Emulation Mode</option>
+          <h1>Emulation Service</h1>
+          <p>You can run this demo without a board. To do this, turn on Emulation Mode</p>
+          <select name="mode" id="mode" data-role="slider">
+            <option value="normal">OFF</option>
+            <option value="emulation">ON</option>
           </select>
-          <p>Select emulation mode if you have no board to use</p>
-          <a id="scan-button" href="#" data-role="button" data-inline="true">Find my board</a><span>
-          <div id="device-list">
-            Empty List
-          </div>
+        </div>
+
+        <div>
+          <h1>Select Device</h1>
+          <p> Please select a device to use with this demo. </p>
+          <a id="scan-button" href="#" data-role="button" data-inline="true">Refresh List</a><span>
+            <div id="device-list">
+              Empty List
+            </div>
+            <p>If your device is not shown, try to refresh the list and make sure the device is discoverable.</p>
         </div>
 
         <div>
