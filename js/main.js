@@ -1,93 +1,56 @@
-var url = '';
-
-g_device = 0;
-
-on_mode_selected = function() {
-	if($('#mode').val()=='normal'){
-		url = 'http://127.0.0.1:8086/ble?callback=?';
-	}else{
-		url = 'http://www.gatt.io:8080/server?callback=?';
-	}
-
-    console.log('now in ' + $('#mode').val() + ' mode; using server: ' + url);
-}
-
-select_device = function(device) {
-    g_device = device;
-
-    console.log('selected device: ' + JSON.stringify(g_device));
-}
-
 $(function(){
-	$('#mode').change(on_mode_selected);
-
-    on_mode_selected();
+	$('#mode').change(function(){
+		juma.emulation_mode($(this).val());
+	});
 
 	$('#scan-button').click(function() {
-  	    var params = {
-		    address : "local",
-		    resource : "/devices/nearby",
-		    operation : "read",
-		    settings : "low latency"
-	    };
-
-	    $.getJSON(url,params,function(data){
-		    var devices = data['device_list'];
-
-            if (devices.length == 0) {
-                $('#device-list').html('Empty List');
-                return;
-            }
-
-            html_str = "";
-		    for(var i=0;i<devices.length;i++){
-			    var device = devices[i];
-                var name = device.name;
-                var addr = device.address;
-                var rssi = device.RSSI;
-
-                html_str += '<label for="device-' + i + '">' + name + ' ' + addr + ' ' + rssi + 'db ' + '</label><input type="radio" name="device" id="device-' + i + '" value="' + i + '"></input>'
-		    }
-
-            $('#device-list').html(html_str);
-
-            $('input[type="radio"]').checkboxradio();
-
-		    for(var i=0;i<devices.length;i++) {
-                (function (device) {
-                    $('#device-' + i).click(function() {
-                        select_device(device);
-                    });
-                })(devices[i]);
-            }
-        });
+		juma.scan('#device-list');
     });
 
 	$('#temperature').click(function() {
-	    if(g_device != 0) {
-	        var params = {
-	            address : g_device.address,
-	            resource : "/sensors/temperature",
-	            operation : "read"
-	        };
-
-	        $.getJSON(url, params, function(data){
-	            $('#temperature-value').html(data['value']+" C");
-	        });
-	    }
+	    juma.read("/sensors/temperature",function(value){
+		    $('#temperature-value').html(value+"℃");
+	    });
 	});
 
 	$('#beep-button').click(function() {
-	    if(g_device != 0) {
-	        var params = {
-	            address : g_device.address,
-	            resource : "/sensors/buzzer",
-	            operation : "write",
-				value : "5s"
-	        };
+	    juma.write("/peripherals/buzzer","5s");
+	}); 
+	
+	
+	// create canvas and context objects
+	var canvas = document.getElementById('picker');
+	var ctx = canvas.getContext('2d');
+	
+	// drawing active image
+	var image = new Image();
+	image.onload = function () {
+	    ctx.drawImage(image, 0, 0, image.width, image.height); // draw the image on the canvas
+	}
+	
+	// select desired colorwheel
+	var imageSrc = 'img/colorwheel1.png';
+	image.src = imageSrc;
+	
+	$('#picker').click(function(e) { // click event handler
+			e.preventDefault();
+			var canvasOffset = $(canvas).offset();
+	        var canvasX = Math.floor(e.pageX - canvasOffset.left);
+	        var canvasY = Math.floor(e.pageY - canvasOffset.top);
+	
+	        // get current pixel
+	        var imageData = ctx.getImageData(canvasX, canvasY, 1, 1);
+	        var pixel = imageData.data;
+	
+	        // update preview color
+	        var pixelColor = "rgb("+pixel[0]+", "+pixel[1]+", "+pixel[2]+")";
+	        
+      
+	        var dColor = pixel[2] + 256 * pixel[1] + 65536 * pixel[0];
 
-	        $.getJSON(url, params, function(data){
-	        });
-	    }
+	        $('#hexVal').html(' #' + ('0000' + dColor.toString(16)).substr(-6)+' ');
+	       			
+			juma.write("/peripherals/rgblight",('0000' + dColor.toString(16)).substr(-6));
+
 	}); 
 });
