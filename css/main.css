@@ -1,4 +1,3 @@
-/* colorpicker styles */
 .colorpicker {
     background-color: #222222;
     border-radius: 5px 5px 5px 5px;
@@ -11,7 +10,6 @@
 }
 #picker {
     cursor: crosshair;
-    float: left;
     margin: 10px;
     border: 0;
 }
